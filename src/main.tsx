@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Button,
-  Checkbox,
   DashedButton,
   Hint,
   Icon,
@@ -235,12 +234,6 @@ function App() {
     }, 850);
   };
 
-  const activationItems = [
-    hotelStatus !== "ready" ? "Add the main hotel with the booking module and at least one OTA. Wait until categories are loaded." : undefined,
-    !roomsSaved ? "Match at least one room category." : undefined,
-    !rateConnected ? "Connect at least one rate." : undefined
-  ].filter(Boolean);
-
   return (
     <ReactorTheme theme="global" themeMode="light">
       <div className="app-shell">
@@ -256,7 +249,6 @@ function App() {
               <ActivationPanel
                 allConfigured={allConfigured}
                 enabled={enabled}
-                items={activationItems as string[]}
                 onToggleEnabled={toggleRateMatch}
               />
               <Tabs activeTab={activeTab} completeTabs={completeTabs} setActiveTab={setActiveTab} unlocked={unlocked} />
@@ -371,42 +363,34 @@ function Ribbon({ onBack }: { onBack: () => void }) {
 function ActivationPanel({
   allConfigured,
   enabled,
-  items,
   onToggleEnabled
 }: {
   allConfigured: boolean;
   enabled: boolean;
-  items: string[];
   onToggleEnabled: () => void;
 }) {
+  const disabledHint = "1. Add the main hotel. Wait until categories are loaded.\n2. Match at least one room category.\n3. Connect at least one rate.";
+
   return (
     <section className="activation-panel">
       <div className="activation-row">
         <span>Rate Match</span>
         <span className={enabled ? "status-pill active" : "status-pill"}>{enabled ? "ACTIVE" : "INACTIVE"}</span>
-        <div className={allConfigured && !enabled ? "attention-toggle" : ""}>
+        <div className={allConfigured && !enabled ? "attention-toggle activation-switch-hint" : "activation-switch-hint"}>
           <Switch
             accent
             disabled={!allConfigured}
             selected={enabled}
             onClick={() => allConfigured && onToggleEnabled()}
-            hint={!allConfigured ? "Complete all settings before activation." : "Turn Rate Match on or off."}
           />
+          {!allConfigured ? (
+            <span className="switch-hint" role="tooltip">
+              <Hint text={disabledHint} />
+            </span>
+          ) : null}
         </div>
+        {enabled ? <span className="next-update-text">Next price update will be at 1:00</span> : null}
       </div>
-      {!allConfigured ? (
-        <div className="warning-box">
-          <Icon name="warning" color="warning" size="xs" />
-          <div>
-            <strong>Complete settings to activate:</strong>
-            <ol>
-              {items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }
@@ -478,7 +462,7 @@ function HotelStep(props: {
         <div className="card-header">
           <h2>Main hotel</h2>
           {props.hotelStatus === "empty" ? (
-            <DashedButton icon="add" text="Add" onClick={() => props.setHotelDialog(true)} />
+            <Button icon="add" text="Add hotel" onClick={() => props.setHotelDialog(true)} />
           ) : (
             <DashedButton text="Change" onClick={() => props.setHotelDialog(true)} />
           )}
@@ -505,10 +489,6 @@ function HotelStep(props: {
           <div className="hotel-summary">
             <p>{props.selectedHotel.name}, Thailand, Phuket, Patong, Bangla Road 77</p>
             <p>Sources: Booking Engine, Booking.com</p>
-            <button className="link-action">
-              <Icon name="sync" color="accent" size="xs" />
-              Start category collection
-            </button>
           </div>
         ) : null}
       </section>
@@ -600,13 +580,14 @@ function RoomsStep(props: {
   saveRooms: () => void;
   roomsSaved: boolean;
 }) {
-  const [bookingColumnSelected, setBookingColumnSelected] = useState(false);
+  const [bookingColumnSelected, setBookingColumnSelected] = useState(true);
 
   return (
     <Column gap={24}>
       <section className="figma-card">
         <div className="card-header">
           <h2>Room category matching</h2>
+          <Button icon="sync" text="Start category collection" />
         </div>
         <div className="card-body">
           <div className="info-strip">
@@ -621,9 +602,7 @@ function RoomsStep(props: {
               <th>
                 <span
                   className="booking-column-toggle"
-                  role="button"
                   tabIndex={0}
-                  onClick={() => setBookingColumnSelected((selected) => !selected)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
@@ -631,7 +610,12 @@ function RoomsStep(props: {
                     }
                   }}
                 >
-                  <Checkbox selected={bookingColumnSelected} tabIndex={-1} /> Booking.com
+                  <Switch
+                    accent
+                    selected={bookingColumnSelected}
+                    onClick={() => setBookingColumnSelected((selected) => !selected)}
+                  />
+                  <span>Booking.com</span>
                 </span>
               </th>
             </tr>
@@ -836,11 +820,11 @@ function RatesStep({
                 <td><a>{row.name}</a></td>
                 <td>
                   {rateState !== "idle" ? (
-                    <span className="status-cell" title={status.hint} tabIndex={status.hint ? 0 : undefined}>
+                    <span className="status-cell">
                       <Tag text={status.label} color={status.color} filled={rateState === "connected"} />
                       {status.hint ? (
-                        <span className="status-hint" role="tooltip">
-                          <Hint text={status.hint} />
+                        <span className="status-error-text">
+                          {status.hint}
                         </span>
                       ) : null}
                     </span>

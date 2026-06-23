@@ -289,8 +289,7 @@ select {
 }
 
 .activation-panel {
-  min-height: 176px;
-  padding: 32px 24px 22px;
+  padding: 24px;
   margin-bottom: 30px;
 }
 
@@ -299,7 +298,12 @@ select {
   align-items: center;
   gap: 8px;
   min-height: 24px;
-  margin-bottom: 26px;
+  font-size: 16px;
+}
+
+.next-update-text {
+  margin-left: 16px;
+  color: rgb(var(--color-neutral));
   font-size: 16px;
 }
 
@@ -319,26 +323,32 @@ select {
   background: rgb(var(--color-success));
 }
 
-.warning-box {
-  min-height: 94px;
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 12px;
-  padding: 14px 16px;
-  border: 1px solid rgb(var(--color-warning));
-  background: rgb(var(--color-warning-lightest));
-  font-size: 16px;
+.activation-switch-hint {
+  position: relative;
+  display: inline-flex;
+  outline: 0;
 }
 
-.warning-box strong {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 18px;
+.switch-hint {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 45;
+  width: max-content;
+  max-width: 360px;
+  white-space: pre-line;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  visibility: hidden;
 }
 
-.warning-box ol {
-  margin: 0;
-  padding-left: 22px;
+.activation-switch-hint:hover .switch-hint,
+.activation-switch-hint:focus-within .switch-hint {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
 }
 
 .tabs {
@@ -413,30 +423,18 @@ select {
 }
 
 .status-cell {
-  position: relative;
   display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   outline: 0;
 }
 
-.status-hint {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  z-index: 45;
-  width: max-content;
+.status-error-text {
   max-width: 360px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%) translateY(-4px);
-  transition: opacity 120ms ease, transform 120ms ease;
-  visibility: hidden;
-}
-
-.status-cell:hover .status-hint,
-.status-cell:focus-visible .status-hint {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  visibility: visible;
+  color: rgb(var(--color-danger));
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .figma-card {
@@ -518,20 +516,6 @@ select {
   display: grid;
   gap: 16px;
   padding: 24px;
-}
-
-.link-action {
-  width: max-content;
-  border: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
-  color: rgb(var(--color-accent-dark));
-  background: transparent;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 700;
 }
 
 .form-grid {

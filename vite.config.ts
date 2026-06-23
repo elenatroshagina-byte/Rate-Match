@@ -6,6 +6,7 @@ const reactorPackage = (name: string) =>
   resolve(__dirname, `node_modules/@reactor/${name}/dist/index.js`);
 
 export default defineConfig({
+  base: "./",
   plugins: [react()],
   resolve: {
     alias: {
@@ -19,6 +20,14 @@ export default defineConfig({
     }
   },
   build: {
-    sourcemap: true
+    assetsInlineLimit: Number.MAX_SAFE_INTEGER,
+    chunkSizeWarningLimit: 20000,
+    cssCodeSplit: false,
+    sourcemap: false,
+    rolldownOptions: {
+      output: {
+        codeSplitting: false
+      }
+    }
   }
 });

@@ -27,6 +27,18 @@ npm run preview
 
 The dev server starts on `http://127.0.0.1:5173/` by default.
 
+## Static Hosting
+
+Run:
+
+```bash
+npm run build
+```
+
+Upload the contents of the generated `dist` folder to hosting. Do not upload `src`, `package.json`, `vite.config.ts`, or other project source files as the public site.
+
+The production build is configured to keep the static upload small by inlining Reactor assets and dynamic chunks into a minimal set of files.
+
 ## Prototype Flow
 
 - Hotel, language and currency
