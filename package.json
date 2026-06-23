@@ -1,0 +1,27 @@
+{
+  "name": "rate-match-settings-prototype",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Clickable Rate Match settings prototype built with TL Reactor.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@reactor/browser": "0.0.145",
+    "@reactor/core": "0.0.196",
+    "@reactor/hooks": "0.0.147",
+    "@reactor/reactor": "0.0.212",
+    "@reactor/style": "0.0.196",
+    "@reactor/theme": "0.0.184",
+    "@reactor/windows": "0.0.132",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest"
+  }
+}
